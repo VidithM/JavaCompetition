@@ -1,4 +1,4 @@
-package computils;
+package computils.structures;
 
 public class Pair<A extends Comparable, B extends Comparable> implements Comparable<Pair<A, B>>{
 
