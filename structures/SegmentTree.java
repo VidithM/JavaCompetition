@@ -47,4 +47,19 @@ public class SegmentTree {
     return lTree.sumRangeQuery(l, r) + rTree.sumRangeQuery(l, r);
   }
 
+  public void update(int pos, int elem){
+    if(lIdx != rIdx){
+      if(pos <= (rIdx + lIdx)/2){
+        lTree.update(pos, elem);
+      } else {
+        rTree.update(pos, elem);
+      }
+      min = Math.min(lTree.getMin(), rTree.getMin());
+      sum = lTree.getSum() + rTree.getSum();
+    } else {
+      min = elem;
+      sum = elem;
+    }
+  }
+
 }
