@@ -1,13 +1,15 @@
-package computils.structures;
+//package computils.structures;
 
 public class SegmentTree {
   private SegmentTree lTree, rTree;
   private int lIdx, rIdx;
   private int min, sum;
+  private int lazy;
 
   public SegmentTree(int l, int r, int arr[]){
     lIdx = l;
     rIdx = r;
+    lazy = 0;
     if(l == r){
       min = arr[l];
       sum = arr[l];
@@ -28,6 +30,16 @@ public class SegmentTree {
   }
 
   public int minRangeQuery(int l, int r){
+    if(lazy != 0){
+      min += lazy;
+      if(lTree != null){
+        lTree.lazyPush(lazy);
+      }
+      if(rTree != null){
+        rTree.lazyPush(lazy);
+      }
+      lazy = 0;
+    }
     if(l > rIdx || r < lIdx){
       return Integer.MAX_VALUE;
     }
@@ -38,6 +50,16 @@ public class SegmentTree {
   }
 
   public int sumRangeQuery(int l, int r){
+    if(lazy != 0){
+      sum += (lazy * (r - l) + 1);
+      if(lTree != null){
+        lTree.lazyPush(lazy);
+      }
+      if(rTree != null){
+        rTree.lazyPush(lazy);
+      }
+      lazy = 0;
+    }
     if(l > rIdx || r < lIdx){
       return 0;
     }
@@ -47,12 +69,37 @@ public class SegmentTree {
     return lTree.sumRangeQuery(l, r) + rTree.sumRangeQuery(l, r);
   }
 
-  public void update(int pos, int elem){
+  public void lazyPush(int val){
+    lazy += val;
+  }
+
+  public void rangeUpdate(int l, int r, int inc){
+    if(l > rIdx || r < lIdx){
+      return;
+    }
+    if(l <= lIdx && r >= rIdx){
+      sum += (inc * (r - l) + 1);
+      min += inc;
+      if(lTree != null){
+        lTree.lazyPush(inc);
+      }
+      if(rTree != null){
+        rTree.lazyPush(inc);
+      }
+    } else {
+      lTree.rangeUpdate(l, r, inc);
+      rTree.rangeUpdate(l, r, inc);
+      min = Math.min(lTree.getMin(), rTree.getMin());
+      sum = lTree.getSum() + rTree.getSum();
+    }
+  }
+
+  public void pointUpdate(int pos, int elem){
     if(lIdx != rIdx){
       if(pos <= (rIdx + lIdx)/2){
-        lTree.update(pos, elem);
+        lTree.pointUpdate(pos, elem);
       } else {
-        rTree.update(pos, elem);
+        rTree.pointUpdate(pos, elem);
       }
       min = Math.min(lTree.getMin(), rTree.getMin());
       sum = lTree.getSum() + rTree.getSum();

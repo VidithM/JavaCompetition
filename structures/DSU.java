@@ -1,6 +1,4 @@
-package computils.structures;
-
-public class DSU {
+class DSU {
   private int[] adj;
   private int[] maxes;
   private int[] sizes;
@@ -33,6 +31,9 @@ public class DSU {
   public void merge(int a, int b){
     int aHead = find(a);
     int bHead = find(b);
+    if(aHead == bHead){
+      return;
+    }
     if(sizes[bHead] > sizes[aHead]){
       adj[aHead] = bHead;
       maxes[bHead] = Math.max(maxes[aHead], maxes[bHead]);

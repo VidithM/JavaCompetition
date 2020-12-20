@@ -1,7 +1,4 @@
-package computils;
-import java.io.*;
-
-public class FastScanner {
+class FastScanner {
   private BufferedReader bf;
   private InputStreamReader read;
 
@@ -29,7 +26,7 @@ public class FastScanner {
     } catch (IOException e) {
       e.printStackTrace();
     }
-    return res;
+    return res.trim();
   }
 
   public int nextInt() {
